@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cloud Society — AWS Project Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue-deep:   #072AC8;
+      --blue-bright: #1E96FC;
+      --blue-light:  #A2D6F9;
+      --yellow-pop:  #FCF300;
+      --yellow-warm: #FFC600;
+      --bg:          #FFFFFF;
+      --bg-soft:     #F4F8FF;
+      --bg-blue:     #EBF5FF;
+      --text-primary:   #050E2D;
+      --text-secondary: #3A5A8C;
+      --text-muted:     #7A9BBF;
+      --border:      rgba(7,42,200,0.12);
+      --border-mid:  rgba(7,42,200,0.22);
+      --font-display: 'Sora', sans-serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+      --radius:    10px;
+      --radius-lg: 18px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-display);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: radial-gradient(circle, rgba(7,42,200,0.07) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+
+    /* Tags */
+    .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 4px 11px; border-radius: 20px; border: 1px solid; font-weight: 500; }
+    .tag-yellow { background: var(--yellow-pop); color: #050E2D; border-color: #d4cc00; }
+    .tag-blue   { background: var(--blue-bright); color: #fff; border-color: #0f7ed4; }
+    .tag-light  { background: var(--bg-blue); color: var(--blue-deep); border-color: var(--blue-light); }
+    .tag-gray   { background: var(--bg-soft); color: var(--text-secondary); border-color: var(--border); }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--blue-deep); color: #fff;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      padding: 12px 26px; border-radius: var(--radius); border: none;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #0a37e8; transform: translateY(-2px); }
+    .btn-yellow {
+      background: var(--yellow-pop); color: var(--text-primary);
+      font-family: var(--font-display); font-size: 14px; font-weight: 700;
+      padding: 12px 26px; border-radius: var(--radius); border: none;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-yellow:hover { background: var(--yellow-warm); transform: translateY(-2px); }
+    .btn-ghost {
+      background: transparent; color: var(--blue-deep);
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      padding: 11px 24px; border-radius: var(--radius);
+      border: 2px solid var(--blue-deep);
+      cursor: pointer; text-decoration: none; display: inline-block;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { background: var(--blue-deep); color: #fff; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--blue-deep);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--yellow-pop);
+    }
+    .nav-logo-text { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .nav-logo-sub  { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--blue-deep); }
+
+    /* HERO */
+    .hero {
+      padding: 88px 0 80px;
+      position: relative; overflow: hidden;
+      background: linear-gradient(150deg, #ebf5ff 0%, #ffffff 50%, #fffde0 100%);
+    }
+    .hero-blob {
+      position: absolute; top: -80px; right: -100px;
+      width: 560px; height: 560px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(252,243,0,0.3) 0%, rgba(30,150,252,0.1) 55%, transparent 100%);
+      pointer-events: none;
+    }
+    .hero-blob2 {
+      position: absolute; bottom: -120px; left: -80px;
+      width: 380px; height: 380px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(7,42,200,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono); font-size: 12px; color: var(--blue-bright);
+      letter-spacing: 0.1em; margin-bottom: 22px;
+      display: flex; align-items: center; gap: 10px; font-weight: 500;
+    }
+    .hero-eyebrow::before { content: ''; display: block; width: 24px; height: 2px; background: var(--blue-bright); border-radius: 2px; }
+    .hero h1 {
+      font-size: clamp(38px, 6vw, 68px); font-weight: 800; line-height: 1.05;
+      margin-bottom: 24px; max-width: 720px; letter-spacing: -0.025em;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(90deg, var(--blue-deep), var(--blue-bright));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero h1 .highlight-box {
+      display: inline-block; background: var(--yellow-pop);
+      border-radius: 8px; padding: 0 10px; margin-left: 4px;
+      -webkit-text-fill-color: var(--text-primary);
+    }
+    .hero-sub { font-size: 18px; color: var(--text-secondary); max-width: 540px; line-height: 1.7; margin-bottom: 40px; font-weight: 400; }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 64px; }
+    .hero-tech-strip { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .hero-tech-strip .label { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+    .hero-tech-strip .chip {
+      background: #fff; border: 1.5px solid var(--border-mid);
+      border-radius: 8px; padding: 5px 13px;
+      color: var(--blue-deep); font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    }
+
+    /* STATS */
+    .stats-bar { background: var(--blue-deep); overflow: hidden; }
+    .stats-inner { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .stat-cell { padding: 36px 40px; border-right: 1px solid rgba(162,214,249,0.18); }
+    .stat-cell:last-child { border-right: none; }
+    .stat-num { font-size: 38px; font-weight: 800; color: var(--yellow-pop); font-family: var(--font-mono); line-height: 1; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .stat-label { font-size: 14px; color: var(--blue-light); }
+
+    /* SECTION HEADINGS */
+    .section-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; gap: 16px; }
+    .section-title { font-size: 11px; font-family: var(--font-mono); color: var(--blue-bright); letter-spacing: 0.12em; margin-bottom: 8px; font-weight: 500; text-transform: uppercase; }
+    .section-h2 { font-size: 30px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; }
+
+    /* FILTER BAR */
+    .filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
+    .search-input {
+      flex: 1; min-width: 200px; max-width: 300px;
+      background: var(--bg-soft); border: 1.5px solid var(--border-mid);
+      border-radius: var(--radius); padding: 10px 16px; color: var(--text-primary);
+      font-family: var(--font-display); font-size: 14px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { border-color: var(--blue-bright); background: #fff; }
+    .filter-btn {
+      background: var(--bg-soft); border: 1.5px solid var(--border);
+      border-radius: 20px; padding: 7px 18px;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+      color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--blue-bright); color: var(--blue-bright); background: #fff; }
+    .filter-btn.active { background: var(--yellow-pop); color: var(--text-primary); border-color: #d4cc00; font-weight: 700; }
+
+    /* PROJECT CARDS */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; margin-bottom: 40px; }
+    .project-card {
+      background: #fff; border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      cursor: pointer; display: flex; flex-direction: column;
+    }
+    .project-card:hover { border-color: var(--blue-bright); transform: translateY(-5px); box-shadow: 0 16px 40px rgba(7,42,200,0.1); }
+    .card-img { width: 100%; height: 160px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .card-img-label { font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,0.65); border: 1px dashed rgba(255,255,255,0.3); padding: 6px 14px; border-radius: 6px; position: relative; z-index: 1; }
+    .card-img-label-dark { font-family: var(--font-mono); font-size: 12px; color: rgba(5,14,45,0.4); border: 1px dashed rgba(5,14,45,0.2); padding: 6px 14px; border-radius: 6px; position: relative; z-index: 1; }
+    .bg-blue-grad   { background: linear-gradient(135deg, #072AC8, #1E96FC); }
+    .bg-yellow-grad { background: linear-gradient(135deg, #FFC600, #FCF300); }
+    .bg-mixed-grad  { background: linear-gradient(135deg, #1E96FC, #A2D6F9); }
+    .bg-deep-grad   { background: linear-gradient(135deg, #072AC8, #A2D6F9); }
+    .card-img-accent { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; }
+    .accent-yellow { background: var(--yellow-pop); }
+    .accent-blue   { background: var(--blue-bright); }
+    .accent-deep   { background: var(--blue-deep); }
+    .card-body { padding: 22px 24px; flex: 1; display: flex; flex-direction: column; }
+    .card-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
+    .card-desc  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; flex: 1; }
+    .card-tags  { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .card-footer a { color: var(--blue-deep); text-decoration: none; font-size: 12px; font-weight: 600; transition: color 0.2s; }
+    .card-footer a:hover { color: var(--blue-bright); }
+
+    /* Submit card */
+    .card-submit {
+      background: linear-gradient(135deg, #f0f7ff 0%, #fffde0 100%);
+      border: 2px dashed var(--blue-bright);
+      border-radius: var(--radius-lg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 260px; gap: 14px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .card-submit:hover { border-color: var(--blue-deep); transform: translateY(-5px); box-shadow: 0 16px 40px rgba(7,42,200,0.08); }
+    .card-submit-icon { width: 54px; height: 54px; border-radius: 50%; background: var(--blue-deep); display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--yellow-pop); line-height: 1; }
+    .card-submit-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .card-submit p { font-size: 13px; color: var(--text-secondary); }
+
+    .load-more-wrap { text-align: center; margin-bottom: 96px; }
+
+    /* ABOUT */
+    .about-section { padding: 88px 0; background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .about-label { font-family: var(--font-mono); font-size: 11px; color: var(--blue-bright); letter-spacing: 0.12em; margin-bottom: 12px; font-weight: 500; text-transform: uppercase; }
+    .about-h2 { font-size: 32px; font-weight: 800; margin-bottom: 18px; line-height: 1.2; letter-spacing: -0.02em; }
+    .about-h2 span { color: var(--blue-deep); }
+    .about-p { font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px; }
+    .about-img { background: linear-gradient(135deg, var(--blue-light), #ddeeff); border: 1.5px solid var(--border-mid); border-radius: var(--radius-lg); height: 300px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 13px; color: var(--blue-deep); }
+
+    /* FOOTER */
+    footer { background: var(--blue-deep); padding: 44px 0; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { font-family: var(--font-mono); font-size: 14px; color: var(--blue-light); }
+    .footer-logo strong { color: var(--yellow-pop); }
+    .footer-links { display: flex; gap: 28px; }
+    .footer-links a { font-size: 14px; color: var(--blue-light); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-copy { font-family: var(--font-mono); font-size: 12px; color: rgba(162,214,249,0.45); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.6s cubic-bezier(.22,1,.36,1) both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.22s; }
+    .delay-3 { animation-delay: 0.35s; }
+    .delay-4 { animation-delay: 0.5s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 720px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr; }
+      .stat-cell { border-right: none; border-bottom: 1px solid rgba(162,214,249,0.15); }
+      .stat-cell:last-child { border-bottom: none; }
+      .nav-links { display: none; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">CS</div>
+        <div>
+          <div class="nav-logo-text">Cloud Society</div>
+          <div class="nav-logo-sub">× AWS Labs</div>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#projects">Projects</a>
+        <a href="#about">About</a>
+        <a href="#members">Members</a>
+        <a href="#" class="btn-yellow" style="padding:9px 20px; font-size:13px;">Join Us</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-blob"></div>
+    <div class="hero-blob2"></div>
+    <div class="container">
+      <div class="hero-eyebrow fade-up">Student AWS Society</div>
+      <h1 class="fade-up delay-1">
+        Building the future<br/>
+        with <span class="gradient-text">cloud technology</span><span class="highlight-box">.</span>
+      </h1>
+      <p class="hero-sub fade-up delay-2">
+        A student-led society partnered with AWS Labs — showcasing real-world projects built with Lambda, DynamoDB, API Gateway, and more. Inspiring the next generation of cloud builders.
+      </p>
+      <div class="hero-ctas fade-up delay-3">
+        <a href="#projects" class="btn-primary">Explore projects</a>
+        <a href="#about" class="btn-ghost">Learn more</a>
+      </div>
+      <div class="hero-tech-strip fade-up delay-4">
+        <span class="label">Powered by</span>
+        <div class="chip">AWS Lambda</div>
+        <div class="chip">API Gateway</div>
+        <div class="chip">DynamoDB</div>
+        <div class="chip">S3</div>
+        <div class="chip">CloudFront</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-cell">
+          <div class="stat-num" id="stat-projects">—</div>
+          <div class="stat-label">Projects published</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num">3 yrs</div>
+          <div class="stat-label">Active since 2022</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num">AWS</div>
+          <div class="stat-label">Official Labs partner</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <section id="projects" style="padding: 80px 0 0; background: var(--bg);">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="section-title">// projects</div>
+          <h2 class="section-h2">What we've built</h2>
+        </div>
+        <a href="#" class="btn-ghost" style="font-size:13px; padding:9px 20px;">View all →</a>
+      </div>
+
+      <div class="filter-bar">
+        <input type="text" class="search-input" id="search" placeholder="Search projects..." />
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="serverless">Serverless</button>
+        <button class="filter-btn" data-filter="ml">ML / AI</button>
+        <button class="filter-btn" data-filter="networking">Networking</button>
+        <button class="filter-btn" data-filter="storage">Storage</button>
+      </div>
+
+      <div class="projects-grid" id="projects-grid">
+
+        <div class="project-card" data-tags="serverless">
+          <div class="card-img bg-blue-grad">
+            <span class="card-img-label">[ project image ]</span>
+            <div class="card-img-accent accent-yellow"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Serverless URL Shortener</div>
+            <div class="card-desc">End-to-end URL shortener using Lambda + API Gateway + DynamoDB with sub-50ms response times on the AWS free tier.</div>
+            <div class="card-tags">
+              <span class="tag tag-blue">Lambda</span>
+              <span class="tag tag-light">DynamoDB</span>
+              <span class="tag tag-gray">API Gateway</span>
+            </div>
+            <div class="card-footer">
+              <span>Team · Fall 2023</span>
+              <a href="#">View project →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-tags="networking">
+          <div class="card-img bg-mixed-grad">
+            <span class="card-img-label">[ project image ]</span>
+            <div class="card-img-accent accent-yellow"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Real-time Chat App</div>
+            <div class="card-desc">WebSocket-powered chat with Cognito auth, CloudFront CDN, and persistent message storage in DynamoDB Streams.</div>
+            <div class="card-tags">
+              <span class="tag tag-blue">WebSocket API</span>
+              <span class="tag tag-light">Cognito</span>
+              <span class="tag tag-gray">CloudFront</span>
+            </div>
+            <div class="card-footer">
+              <span>Team · Spring 2024</span>
+              <a href="#">View project →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-tags="ml">
+          <div class="card-img bg-yellow-grad">
+            <span class="card-img-label-dark">[ project image ]</span>
+            <div class="card-img-accent accent-deep"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Image Classifier API</div>
+            <div class="card-desc">Serverless image recognition using AWS Rekognition + Lambda, exposed via a public REST API with usage throttling.</div>
+            <div class="card-tags">
+              <span class="tag tag-yellow">Rekognition</span>
+              <span class="tag tag-blue">Lambda</span>
+              <span class="tag tag-gray">S3</span>
+            </div>
+            <div class="card-footer">
+              <span>Team · Fall 2024</span>
+              <a href="#">View project →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-tags="storage">
+          <div class="card-img bg-deep-grad">
+            <span class="card-img-label">[ project image ]</span>
+            <div class="card-img-accent accent-yellow"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">S3 File Vault</div>
+            <div class="card-desc">Secure file upload and sharing platform with presigned S3 URLs, lifecycle policies, and fine-grained IAM access control.</div>
+            <div class="card-tags">
+              <span class="tag tag-light">S3</span>
+              <span class="tag tag-blue">IAM</span>
+              <span class="tag tag-gray">Lambda</span>
+            </div>
+            <div class="card-footer">
+              <span>Team · Spring 2025</span>
+              <a href="#">View project →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-submit" id="submit-card">
+          <div class="card-submit-icon">+</div>
+          <div class="card-submit-title">Submit your project</div>
+          <p>Open to all members</p>
+          <span class="tag tag-blue" style="font-size:11px;">Get featured</span>
+        </div>
+
+      </div>
+
+      <div class="load-more-wrap">
+        <button class="btn-ghost" id="load-more">Load more projects</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <div class="about-label">// about us</div>
+          <h2 class="about-h2">Builders learning by <span>shipping</span></h2>
+          <p class="about-p">
+            Cloud Society is a student-run organization working directly with Amazon AWS Labs.
+            We design, build, and deploy real cloud infrastructure — not toy demos, but production-grade
+            systems that teach us what textbooks can't.
+          </p>
+          <p class="about-p">
+            Every project in this portfolio was built by students, for the community. Future generations
+            can fork, learn from, and build on top of everything here.
+          </p>
+          <a href="#members" class="btn-primary">Meet the team →</a>
+        </div>
+        <div class="about-img">[ society / team photo ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-logo"><strong>Cloud Society</strong> × AWS Labs</div>
+      <div class="footer-links">
+        <a href="#">GitHub</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-copy">© 2025 Cloud Society. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    const cards = document.querySelectorAll('.project-card');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const searchInput = document.getElementById('search');
+    let activeFilter = 'all';
+
+    function applyFilters() {
+      const query = searchInput.value.toLowerCase();
+      cards.forEach(card => {
+        const tags  = card.dataset.tags || '';
+        const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+        const desc  = card.querySelector('.card-desc')?.textContent.toLowerCase() || '';
+        const matchesFilter = activeFilter === 'all' || tags.includes(activeFilter);
+        const matchesSearch = !query || title.includes(query) || desc.includes(query) || tags.includes(query);
+        card.style.display = matchesFilter && matchesSearch ? '' : 'none';
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+    searchInput.addEventListener('input', applyFilters);
+
+    function animateCount(el, target) {
+      let current = 0;
+      const step = Math.ceil(target / 30);
+      const interval = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current + '+';
+        if (current >= target) clearInterval(interval);
+      }, 40);
+    }
+    setTimeout(() => animateCount(document.getElementById('stat-projects'), 24), 400);
+
+    document.getElementById('load-more').addEventListener('click', function() {
+      this.textContent = 'Loading...';
+      setTimeout(() => { this.textContent = 'No more projects yet'; this.disabled = true; }, 800);
+    });
+
+    document.getElementById('submit-card').addEventListener('click', () => {
+      alert('Project submission form coming soon!');
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = `fadeUp 0.45s cubic-bezier(.22,1,.36,1) ${i * 0.07}s both`;
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.project-card, .card-submit').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
